@@ -81,7 +81,7 @@ while True:
     Type = input("Type 'A' or 'B'-> 🎯 ")
 
     if (Type == "A"):
-      _1choice = n1
+      _1choice = n1 
       _2choice = n2
     else:
       _1choice = n2
