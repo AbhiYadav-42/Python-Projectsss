@@ -22,7 +22,7 @@ def add():
 
 # FILE I/O
 
-  with open("Password_Manager/password.txt","w") as pass_word:
+  with open("Password_Manager /Password_Manager1/password.txt","w") as pass_word:
     pass_word.write(f"{website}: {password}\n")
   return print("done")
   
@@ -42,3 +42,4 @@ while True:
   play_again = input("wanna do something else?(y/n): ")
   if play_again != "y":
     break
+  
