@@ -1,5 +1,6 @@
 import os
 import string
+import json
 #  Core Structure (No encryption) of your password manager project.
 
 
@@ -19,13 +20,10 @@ pass_dic = {
 def load_passwords():
   global pass_dic
   try:
-    with open("Password_Manager /Password_Manager1/password.json" ,"r") as pass_word:
-      for line in pass_word:
-        if ":" in line:
-          website, password = line.strip().split(":",1)
-          pass_dic[website.strip()] = password.strip()
-  except FileNotFoundError:
-    pass
+    with open("Password_Manager/Password_Manager1/password.json" ,"r") as pass_word:
+      pass_dic = json.load(pass_word)
+  except FileNotFoundError as e:
+    print(e)
 
 special_symbols = set(string.punctuation) 
 
@@ -78,15 +76,14 @@ def add():
   if p[0] == True:
     global pass_dic
     pass_dic[website] = password
-# FILE I/O
-    with open("Password_Manager /Password_Manager1/password.json", "a") as pass_word:
-      pass_word.write(f"{website}: {password}\n")
-      
+# FILE I/O of adding
+    with open("Password_Manager/Password_Manager1/password.json", "w") as pass_word:
+      json.dump(pass_dic,pass_word,indent=4)
     print("Password SAVED!!")     # SAVED!!
   else:
     print(p[1])     # Print the second element (The error part in the feedback list ) 
-      
-  
+
+# VIEW
 def view():
   global pass_dic
   print(pass_dic)  
