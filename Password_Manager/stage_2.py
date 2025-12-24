@@ -40,7 +40,7 @@ def Master_Pass():
 
         if hashed2 in data and data[hashed2] == hashed:
           print("✅ Password Verified!!")
-          break
+          return True
         else:
           print("❌ Incorrect credentials!!")
 

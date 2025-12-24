@@ -92,11 +92,9 @@ load_passwords()
 
 
 # calling the Master Password
-if not stage_2.Master_Pass():
-
-
+if stage_2.Master_Pass():
   while True:
-    print("Do You wanna add a mew password or view exisitng ones? ")
+    print("Do You wanna add a new password or view exisitng ones? ")
     us_in = input()
     if us_in.lower() == "add":
       add()
