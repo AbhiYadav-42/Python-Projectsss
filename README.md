@@ -12,6 +12,7 @@ A multi-stage **Password Manager project** built step by step.
 
 - **Stage_1.py** → Basic password manager (add, view, delete passwords)  
 - **stage_1.md** → Documentation for Stage 1  
+- **stage_2.md** → Dcoumentation for stage 2
 - **Password_Manager1/** → Stores password data (JSON-based storage)
 
 > Future stages will add validation, encryption, and better structure.
