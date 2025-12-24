@@ -93,17 +93,18 @@ load_passwords()
 
 # calling the Master Password
 if not stage_2.Master_Pass():
+
+
+  while True:
+    print("Do You wanna add a mew password or view exisitng ones? ")
+    us_in = input()
+    if us_in.lower() == "add":
+      add()
+    elif us_in.lower() == "view":
+      view()
+      
+    play_again = input("wanna do something else?(y/n): ")
+    if play_again != "y":
+      break
+else:
   exit()
-
-
-while True:
-  print("Do You wanna add a mew password or view exisitng ones? ")
-  us_in = input()
-  if us_in.lower() == "add":
-    add()
-  elif us_in.lower() == "view":
-    view()
-    
-  play_again = input("wanna do something else?(y/n): ")
-  if play_again != "y":
-    break
