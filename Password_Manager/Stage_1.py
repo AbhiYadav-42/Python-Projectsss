@@ -1,6 +1,7 @@
 import os
 import string
 import json
+import stage_2
 #  Core Structure (No encryption) of your password manager project.
 
 
@@ -88,6 +89,10 @@ def view():
   global pass_dic
   print(pass_dic)  
 load_passwords()
+
+
+# calling the Master Password
+stage_2.Master_Pass()
 
 while True:
   print("Do You wanna add a mew password or view exisitng ones? ")
