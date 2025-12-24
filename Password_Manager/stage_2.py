@@ -19,10 +19,17 @@ def Master_Pass():
       except Exception as e:
         print(e)
       
-      Master = "Master_password"
+      Master = "Master_password"   # Key-pair
       print("Enter Master Password: ")
       in_put = input()
-      if Master in  data and data[Master] ==in_put:
+      salt ="X9@#"                  # applying salt in the value-pair
+      in_put_salt = salt + in_put
+      
+      # value-pair successfully hashed
+      hashed = hashlib.sha256(in_put_salt.encode()).hexdigest()
+    
+    
+      if Master in  data and data[Master] == hashed:
         print("Password Verified ")
         break
       elif i==0 :
