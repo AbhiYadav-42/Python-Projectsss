@@ -92,7 +92,9 @@ load_passwords()
 
 
 # calling the Master Password
-stage_2.Master_Pass()
+if not stage_2.Master_Pass():
+  exit()
+
 
 while True:
   print("Do You wanna add a mew password or view exisitng ones? ")

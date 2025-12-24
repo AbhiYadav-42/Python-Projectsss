@@ -5,6 +5,7 @@ import os
 import string
 import json
 import hashlib
+import getpass
 
 
 def Master_Pass():
@@ -19,20 +20,29 @@ def Master_Pass():
       except Exception as e:
         print(e)
       
-      Master = "Master_password"   # Key-pair
-      print("Enter Master Password: ")
-      in_put = input()
-      salt ="X9@#"                  # applying salt in the value-pair
+      salt ="X9@#"      # applying salt in the key-value-pairs
+      
+      Master = getpass.getpass(prompt="Enter Username: ")   # Key-pair
+      Master_salt = Master + salt
+      
+      # key-pair successfully hashed
+      hashed2 = hashlib.sha256(Master_salt.encode()).hexdigest()
+      
+      in_put = getpass.getpass(prompt="Enter Master Password: ")
       in_put_salt = salt + in_put
       
       # value-pair successfully hashed
       hashed = hashlib.sha256(in_put_salt.encode()).hexdigest()
     
     
-      if Master in  data and data[Master] == hashed:
+      if hashed2 in data and data[hashed2] == hashed:
         print("Password Verified ")
         break
-      elif i==0 :
+      else:
         print("Incorrect!!")
-        print("\nTry again")
-        i+=1
+        while True: 
+            wanna_try_again = input("wanna try again? (y/n): ")
+            if wanna_try_again == "y":
+                break
+            elif wanna_try_again == "n":
+                return False
