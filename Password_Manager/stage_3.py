@@ -29,9 +29,9 @@ def encryption(master_password: str , salt:bytes) -> bytes:
   return key
 
 
-
 def decryption(encrypted_password:str, key:bytes) ->str:
   cipher = Fernet(key)
   decrypted_bytes = cipher.decrypt(encrypted_password.encode ('utf-8'))
   decrypted_password = decrypted_bytes.decode('utf-8')
   return decrypted_password
+
