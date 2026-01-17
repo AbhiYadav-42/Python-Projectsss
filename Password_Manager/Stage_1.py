@@ -1,7 +1,17 @@
 import os
 import string
 import json
+import hashlib
+import getpass
+import base64
+from cryptography.fernet import Fernet
+from base64 import urlsafe_b64encode
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.backends import default_backend
 import stage_2
+import stage_3
+
 #  Core Structure (No encryption) of your password manager project.
 
 
@@ -14,14 +24,13 @@ import stage_2
 #
 pass_dic = {
 # "wesbite_name" : "password"
-  " github" : " Abhi@123",
-  "abhi@gmail.com" : "1Abhi@321"
 }
 
+pass_file = "Password_Manager/Password_Manager1/password.json"
 def load_passwords():
   global pass_dic
   try:
-    with open("Password_Manager/Password_Manager1/password.json" ,"r") as pass_word:
+    with open(pass_file ,"r") as pass_word:
       pass_dic = json.load(pass_word)
   except FileNotFoundError as e:
     print(e)
@@ -66,43 +75,50 @@ def validation_pass(password):
       Feedback.append("Password must contains atleast one lowecase")
     return False ,"\n".join(Feedback)
 
-def add():
+def add(key):
   website = input("Website name: ")
-
   password = input("Password: ")
-  
-  p = validation_pass(password)       #  calling validation function
-  
-  # checking if the first element is true (validation is PASSED!!)
-  if p[0] == True:
-    global pass_dic
-    pass_dic[website] = password
-# FILE I/O of adding
-    with open("Password_Manager/Password_Manager1/password.json", "w") as pass_word:
-      json.dump(pass_dic,pass_word,indent=4)
-    print("Password SAVED!!")     # SAVED!!
-  else:
-    print(p[1])     # Print the second element (The error part in the feedback list ) 
+
+  if not validation_pass(password)[0]:
+    print(validation_pass(password)[1])
+    return
+
+# Encryp the password first
+  f = Fernet(key)
+  encrypted_password = f.encrypt(password.encode('utf-8'))
+
+# FILE I/O of storing encrypted password in the dict
+  pass_dic[website] = encrypted_password.decode('utf-8')
+
+  with open(pass_file, "w") as pass_word:
+    json.dump(pass_dic,pass_word,indent=4)
+  print("Password SAVED!!")     # SAVED!!
 
 # VIEW
-def view():
+def view(key):
   global pass_dic
-  print(pass_dic)  
-load_passwords()
-
+  for website, encrypted_pass in pass_dic.items():
+    try:
+      decrypted_pass = stage_3.decryption(encrypted_pass,key)
+      print(f"{website}: {decrypted_pass}")
+    except Exception as e:
+      print(f"Error decrypting {website} : {e}")
 
 # calling the Master Password
-if stage_2.Master_Pass():
-  while True:
+master_password = stage_2.Master_Pass()
+if not master_password:
+    exit()
+
+load_passwords()
+key =  stage_3.encryption(master_password, stage_2.KDF_SALT)
+while True:
     print("Do You wanna add a new password or view exisitng ones? ")
     us_in = input()
     if us_in.lower() == "add":
-      add()
+      add(key)
     elif us_in.lower() == "view":
-      view()
+      view(key)
       
     play_again = input("wanna do something else?(y/n): ")
     if play_again != "y":
       break
-else:
-  exit()
