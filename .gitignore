@@ -20,3 +20,8 @@ venv/
 
 # vscode
 .vscode/
+
+# flappy bird -img and docu-img
+img/
+docu_img
+
