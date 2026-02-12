@@ -36,12 +36,20 @@ pass_pipe = False
 # LOad images 
 bg = pygame.image.load('Flappy_bird/img/bg.png')
 ground_img = pygame.image.load('Flappy_bird/img/ground.png')
+button_img = pygame.image.load('Flappy_bird/img/restart.png')
 
 # draw text to image function
 def draw_text(text, font, text_col, x,y):
   img = font.render(text,True, text_col)
   screen.blit(img,(x,y))
 
+
+def reset_game():
+  pipe_group.empty()
+  flappy.rect.x =100
+  flappy.rect.y =  int(screen_height/2)  
+  score = 0
+  return score
 
 class Bird(pygame.sprite.Sprite):
   def __init__(self,x,y):
@@ -117,6 +125,31 @@ class pipe(pygame.sprite.Sprite):
     self.rect.x -= scroll_speed
     if self.rect.right < 0:
       self.kill()
+
+# restart button
+class Button():
+  def __init__(self,x,y,image):
+    self.image = image
+    self.rect = self.image.get_rect()
+    self.rect.topleft = (x,y)
+    
+  def draw(self):
+    
+    action = False
+    # get mouse position
+    pos =pygame.mouse.get_pos()
+    
+    # chceck if mouse is over the button - looking for collision
+    if self.rect.collidepoint(pos):
+      if pygame.mouse.get_pressed()[0] ==1 :
+        action = True
+
+
+    #drae button
+    screen.blit(self.image,(self.rect.x, self.rect.y))
+
+    return action
+
 # cREATE A GROUP
 bird_group = pygame.sprite.Group()
 pipe_group = pygame.sprite.Group()
@@ -125,7 +158,8 @@ flappy = Bird(100,int(screen_height / 2 ))    # putting the Bird in the position
 
 bird_group.add(flappy)
 
-
+# restart button instance
+button = Button(screen_width // 2-50, screen_height //2-100,button_img)
 
 # Game LOOP-
 run = True
@@ -194,6 +228,14 @@ while run:
       ground_scroll =0
       
     pipe_group.update()   # for stopping the pipe to move when the game_over = true
+
+
+# check for game over! -  button added  
+  if game_over ==True:
+    if button.draw() ==  True:    # added the mouse click on restart button
+      game_over = False
+      score = reset_game()
+
 
   for event in pygame.event.get(): 		# the only event that  is happening 
     if event.type == pygame.QUIT:run = False		# this for quitting 
