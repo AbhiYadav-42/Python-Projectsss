@@ -14,6 +14,12 @@ screen_height =936
 screen = pygame.display.set_mode((screen_width,screen_height))
 pygame.display.set_caption('Flappy Bird')
 
+#define font
+font = pygame.font.SysFont('bauhaus 93',  60)
+
+# define colours
+white = (255,255,255)
+
 # define game vari
 ground_scroll = 0
 scroll_speed = 4
@@ -22,11 +28,19 @@ game_over = False
 pipe_gap = 150
 pipe_freq = 1500 # milliseconds
 last_pipe = pygame.time.get_ticks() - pipe_freq
+score= 0
+pass_pipe = False
+
 
 
 # LOad images 
 bg = pygame.image.load('Flappy_bird/img/bg.png')
 ground_img = pygame.image.load('Flappy_bird/img/ground.png')
+
+# draw text to image function
+def draw_text(text, font, text_col, x,y):
+  img = font.render(text,True, text_col)
+  screen.blit(img,(x,y))
 
 
 class Bird(pygame.sprite.Sprite):
@@ -60,7 +74,7 @@ class Bird(pygame.sprite.Sprite):
       if keys[pygame.K_SPACE] and self.clicked == False:
         self.clicked = True
         self.vel = -10
-# here , catching the Space-bar being realsed 
+        # here , catching the Space-bar being realsed 
       if not keys[pygame.K_SPACE] == 0 :
         self.clicked = False
 
@@ -132,6 +146,22 @@ while run:
   
   # draw ground!!
   screen.blit(ground_img,(ground_scroll,768))
+  
+  
+  # check the score! -> score_board build logic
+  if len(pipe_group) > 0:     #this group is like a list so, i can acess each individual like in list 
+    if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.left\
+      and bird_group.sprites()[0].rect.right < pipe_group.sprites()[0].rect.right\
+      and pass_pipe == False:
+      pass_pipe = True
+    if pass_pipe == True:   # Leaving the pipe area 
+      if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.right:
+        score +=1
+        pass_pipe = False
+  # so right now the score is on the text format in the terminal , we need to convert the text into the img and then .blit() to draw the img on app.
+  
+  
+  draw_text(str(score), font, white, int(screen_width /2),20)
   
   # look for collision
   if pygame.sprite.groupcollide(bird_group, pipe_group, False, False) or flappy.rect.top< 0:
