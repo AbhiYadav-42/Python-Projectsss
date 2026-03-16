@@ -63,4 +63,4 @@ def Apply_filters(df, filters):
     column = filter_config.get("column")
 
     if column not in df_filtered.columns:
-      continue
+      continue 
